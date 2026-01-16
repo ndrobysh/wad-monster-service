@@ -7,7 +7,7 @@ spring:
   data:
     mongodb:
       host: ${MONGO_HOST:localhost}
-      port: ${MONGO_PORT:27017}
+      port: ${MONGO_PORT:27019}
       database: monster_db
 
 # Service auth pour validation token
