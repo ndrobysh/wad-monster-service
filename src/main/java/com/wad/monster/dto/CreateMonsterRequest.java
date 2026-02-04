@@ -1,35 +1,23 @@
-package com.wad.monster.model;
+package com.wad.monster.dto;
 
+import com.wad.monster.model.Skill;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "monsters")
-public class Monster {
-
-    @Id
-    private String id;
-
-    private String owner;
+public class CreateMonsterRequest {
     private int templateId;
     private String name;
     private String elementType;
-
     private int hp;
     private int atk;
     private int def;
     private int vit;
-
-    private int level;
-    private int experience;
-    private int skillPoints;
-
     private List<Skill> skills;
+    private String owner;
 }
