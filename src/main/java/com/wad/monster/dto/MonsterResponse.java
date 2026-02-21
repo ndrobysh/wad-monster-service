@@ -1,7 +1,6 @@
 package com.wad.monster.dto;
 
 import com.wad.monster.model.Monster;
-import com.wad.monster.model.MonsterType;
 
 public record MonsterResponse(
         String id,
@@ -10,7 +9,7 @@ public record MonsterResponse(
         int atk,
         int def,
         int vit,
-        MonsterType type
+        String elementType
 ) {
     public static MonsterResponse from(Monster monster) {
         return new MonsterResponse(
@@ -20,7 +19,7 @@ public record MonsterResponse(
                 monster.getAtk(),
                 monster.getDef(),
                 monster.getVit(),
-                monster.getType()
+                monster.getElementType()
         );
     }
 }
