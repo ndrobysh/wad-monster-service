@@ -23,8 +23,8 @@ public class MonsterService {
         return monsterRepository.findById(id);
     }
 
-    public List<Monster> getMonstersByType(MonsterType type) {
-        return monsterRepository.findByType(type);
+    public List<Monster> getMonstersByElementType(String elementType) {
+        return monsterRepository.findByElementType(elementType);
     }
 
     public List<MonsterType> getAllTypes() {
