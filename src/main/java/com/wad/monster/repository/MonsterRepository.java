@@ -12,4 +12,6 @@ public interface MonsterRepository extends MongoRepository<Monster, String> {
     List<Monster> findByElementType(String elementType);
 
     List<Monster> findByNameContainingIgnoreCase(String name);
+
+    List<Monster> findByOwner(String owner);
 }
