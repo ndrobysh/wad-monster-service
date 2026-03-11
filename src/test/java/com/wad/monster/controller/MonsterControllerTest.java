@@ -47,14 +47,14 @@ class MonsterControllerTest {
         sample.setHp(1200); sample.setAtk(450); sample.setDef(300); sample.setVit(85);
         sample.setLevel(1); sample.setExperience(0); sample.setSkillPoints(0);
         sample.setSkills(new ArrayList<>(Arrays.asList(
-                new Skill(1, 125, new Ratio("atk", 25), 0, 1, 5))));
+                new Skill("Flamme", 1, 125, new Ratio("atk", 25), 0, 1, 5))));
     }
 
     @Test
     void getAllMonsters_returns200() throws Exception {
         when(authService.validateToken(TOKEN)).thenReturn(USER);
         when(monsterService.getMonstersByOwner(USER)).thenReturn(List.of(sample));
-        mockMvc.perform(get("/api/monsters").header("Authorization", TOKEN))
+        mockMvc.perform(get("/api/monster").header("Authorization", TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].elementType").value("fire"))
                 .andExpect(jsonPath("$[0].name").value("Ifrit"));
@@ -64,7 +64,7 @@ class MonsterControllerTest {
     void getAllMonsters_returns401() throws Exception {
         when(authService.validateToken("Bearer bad"))
                 .thenThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
-        mockMvc.perform(get("/api/monsters").header("Authorization", "Bearer bad"))
+        mockMvc.perform(get("/api/monster").header("Authorization", "Bearer bad"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -72,7 +72,7 @@ class MonsterControllerTest {
     void getMonstersByPlayer_returns200() throws Exception {
         when(authService.validateToken(TOKEN)).thenReturn(USER);
         when(monsterService.getMonstersByOwner(USER)).thenReturn(List.of(sample));
-        mockMvc.perform(get("/api/monsters/player/player1").header("Authorization", TOKEN))
+        mockMvc.perform(get("/api/monster/player/player1").header("Authorization", TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Ifrit"));
     }
@@ -80,14 +80,14 @@ class MonsterControllerTest {
     @Test
     void getMonstersByPlayer_returns403ForOtherUser() throws Exception {
         when(authService.validateToken(TOKEN)).thenReturn(USER);
-        mockMvc.perform(get("/api/monsters/player/otherUser").header("Authorization", TOKEN))
+        mockMvc.perform(get("/api/monster/player/otherUser").header("Authorization", TOKEN))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     void listAllMonsters_returns200() throws Exception {
         when(monsterService.getAllMonsters()).thenReturn(List.of(sample));
-        mockMvc.perform(get("/api/monsters/list"))
+        mockMvc.perform(get("/api/monster/list"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Ifrit"))
                 .andExpect(jsonPath("$[0].elementType").value("fire"));
@@ -97,7 +97,7 @@ class MonsterControllerTest {
     void createMonster_returns201() throws Exception {
         when(authService.validateToken(TOKEN)).thenReturn(USER);
         when(monsterService.createMonster(any())).thenReturn(sample);
-        mockMvc.perform(post("/api/monsters").header("Authorization", TOKEN)
+        mockMvc.perform(post("/api/monster").header("Authorization", TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CreateMonsterRequest())))
                 .andExpect(status().isCreated())
@@ -109,7 +109,7 @@ class MonsterControllerTest {
         sample.setExperience(50);
         when(authService.validateToken(TOKEN)).thenReturn(USER);
         when(monsterService.gainExperience(eq("abc123"), eq(USER), any())).thenReturn(sample);
-        mockMvc.perform(post("/api/monsters/abc123/experience").header("Authorization", TOKEN)
+        mockMvc.perform(post("/api/monster/abc123/experience").header("Authorization", TOKEN)
                         .contentType(MediaType.APPLICATION_JSON).content("{\"amount\":50}"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.experience").value(50));
     }
@@ -118,7 +118,7 @@ class MonsterControllerTest {
     void deleteMonster_returns200() throws Exception {
         when(authService.validateToken(TOKEN)).thenReturn(USER);
         doNothing().when(monsterService).deleteMonster("abc123", USER);
-        mockMvc.perform(delete("/api/monsters/abc123").header("Authorization", TOKEN))
+        mockMvc.perform(delete("/api/monster/abc123").header("Authorization", TOKEN))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.message").value("Monstre supprimé"));
     }
 }

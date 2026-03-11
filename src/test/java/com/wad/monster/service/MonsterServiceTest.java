@@ -53,9 +53,9 @@ class MonsterServiceTest {
         sample.setExperience(0);
         sample.setSkillPoints(0);
         sample.setSkills(new ArrayList<>(Arrays.asList(
-                new Skill(1, 125, new Ratio("atk", 25), 0, 1, 5),
-                new Skill(2, 250, new Ratio("atk", 27.5), 2, 1, 7),
-                new Skill(3, 425, new Ratio("atk", 40), 5, 1, 5)
+                new Skill("Flamme", 1, 125, new Ratio("atk", 25), 0, 1, 5),
+                new Skill("Explosion", 2, 250, new Ratio("atk", 27.5), 2, 1, 7),
+                new Skill("Inferno", 3, 425, new Ratio("atk", 40), 5, 1, 5)
         )));
     }
 
@@ -96,7 +96,7 @@ class MonsterServiceTest {
         req.setTemplateId(1);
         req.setElementType("fire");
         req.setHp(1200); req.setAtk(450); req.setDef(300); req.setVit(85);
-        req.setSkills(new ArrayList<>(List.of(new Skill(1, 125, new Ratio("atk", 25), 0, 0, 5))));
+        req.setSkills(new ArrayList<>(List.of(new Skill("Flamme", 1, 125, new Ratio("atk", 25), 0, 0, 5))));
         when(monsterRepository.save(any(Monster.class))).thenAnswer(inv -> inv.getArgument(0));
         Monster m = monsterService.createMonster(req);
         assertThat(m.getName()).isEqualTo("Ifrit");

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Skill {
+    private String name;
     private int num;
     private int dmg;
     private Ratio ratio;

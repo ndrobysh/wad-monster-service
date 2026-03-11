@@ -9,7 +9,8 @@ public record MonsterResponse(
         int atk,
         int def,
         int vit,
-        String elementType
+        String elementType,
+        int level
 ) {
     public static MonsterResponse from(Monster monster) {
         return new MonsterResponse(
@@ -19,7 +20,8 @@ public record MonsterResponse(
                 monster.getAtk(),
                 monster.getDef(),
                 monster.getVit(),
-                monster.getElementType()
+                monster.getElementType(),
+                monster.getLevel()
         );
     }
 }
