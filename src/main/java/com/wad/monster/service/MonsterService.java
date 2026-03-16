@@ -34,16 +34,51 @@ public class MonsterService {
     }
 
     public List<Monster> getMonstersByOwner(String owner) {
-        return monsterRepository.findByOwner(owner);
+        List<Monster> monsters = monsterRepository.findByOwner(owner);
+        monsters.forEach(this::normalizeSkills);
+        return monsters;
     }
 
     public Monster getMonsterByIdAndOwner(String id, String owner) {
-        return monsterRepository.findByIdAndOwner(id, owner)
+        Monster monster = monsterRepository.findByIdAndOwner(id, owner)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Monstre introuvable"));
+        normalizeSkills(monster);
+        return monster;
     }
 
     public Optional<Monster> getMonsterById(String id) {
-        return monsterRepository.findById(id);
+        Optional<Monster> monster = monsterRepository.findById(id);
+        monster.ifPresent(this::normalizeSkills);
+        return monster;
+    }
+
+    /**
+     * Fix legacy monsters created before skill schema alignment.
+     * Old invocation service sent baseDamage/multiplier fields that didn't map
+     * to Skill's dmg/ratio.percent, leaving them at 0 in MongoDB.
+     */
+    private void normalizeSkills(Monster monster) {
+        if (monster.getSkills() == null) return;
+        boolean dirty = false;
+        List<Skill> skills = monster.getSkills();
+        for (int i = 0; i < skills.size(); i++) {
+            Skill s = skills.get(i);
+            if (s.getNum() <= 0) {
+                s.setNum(i + 1);
+                dirty = true;
+            }
+            if (s.getLvlMax() <= 0) {
+                s.setLvlMax(5);
+                dirty = true;
+            }
+            if (s.getLevel() <= 0) {
+                s.setLevel(1);
+                dirty = true;
+            }
+        }
+        if (dirty) {
+            monsterRepository.save(monster);
+        }
     }
 
     public Monster createMonster(CreateMonsterRequest request) {
