@@ -150,15 +150,11 @@ class MonsterServiceTest {
     }
 
     @Test
-    void gainExperience_throwsOnNegative() {
+    void gainExperience_throwsOnInvalidAmount() {
         when(monsterRepository.findByIdAndOwner(ID, OWNER)).thenReturn(Optional.of(sample));
         assertThatThrownBy(() -> monsterService.gainExperience(ID, OWNER, new GainExperienceRequest(-1)))
                 .isInstanceOf(ResponseStatusException.class).hasMessageContaining("positif");
-    }
-
-    @Test
-    void gainExperience_throwsOnZero() {
-        when(monsterRepository.findByIdAndOwner(ID, OWNER)).thenReturn(Optional.of(sample));
+        // zero aussi
         assertThatThrownBy(() -> monsterService.gainExperience(ID, OWNER, new GainExperienceRequest(0)))
                 .isInstanceOf(ResponseStatusException.class).hasMessageContaining("positif");
     }
