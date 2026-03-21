@@ -82,6 +82,7 @@ public class MonsterService {
         }
     }
 
+    // TODO: ajouter validation des stats max par rapport au template
     public Monster createMonster(CreateMonsterRequest request) {
         String name = request.getName();
         if (name == null || name.isBlank()) {
@@ -118,6 +119,7 @@ public class MonsterService {
                 skills
         );
 
+        System.out.println("monster created: " + monster.getName());
         return monsterRepository.save(monster);
     }
 
