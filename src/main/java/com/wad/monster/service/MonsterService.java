@@ -35,6 +35,7 @@ public class MonsterService {
     }
 
     public List<Monster> getMonstersByOwner(String owner) {
+        // FIXME: ca marche mais c'est pas opti quand y'a beaucoup de monstres
         List<Monster> monsters = monsterRepository.findByOwner(owner);
         monsters.forEach(this::normalizeSkills);
         return monsters;
@@ -174,6 +175,7 @@ public class MonsterService {
     public void deleteMonster(String id, String owner) {
         Monster monster = monsterRepository.findByIdAndOwner(id, owner)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Monstre introuvable"));
+        System.out.println("DEBUG: suppression monstre " + monster.getName());
         monsterRepository.delete(monster);
     }
 }
